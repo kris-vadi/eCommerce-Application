@@ -75,6 +75,8 @@
 }
 
 .product-card__price-wrapper {
+  display: flex;
+  gap: 7px;
   font-size: 1.2em;
   font-weight: 600;
 }

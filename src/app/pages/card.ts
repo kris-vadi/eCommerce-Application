@@ -1,25 +1,33 @@
 import { createElement, createImageElement } from '../components/utils';
-import { CardData } from '../types/types';
+import { Product, Price } from '../types/types';
 
 class Card {
-  data: CardData;
+  data: Product;
 
-  constructor(data: CardData) {
-    this.data = data;
+  constructor() {
+    this.data = JSON.parse(localStorage.getItem('currentProduct-data')!);
   }
 
   public drawCard(): HTMLDivElement {
     const wrapper = createElement('div', ['product-card', 'main__wrapper'], '', {
       'data-slideIndex': '1',
     }) as HTMLDivElement;
-    const slider = this.drawSlider();
-    const modal = this.drawModal();
+    const slider = this.drawSlider(this.data);
+    const modal = this.drawModal(this.data);
     const info = createElement('div', ['product-card__info']) as HTMLDivElement;
-    const heading = createElement('h2', ['product-card__heading'], this.data.title) as HTMLElement;
-    const priceWrapper = this.drawPriceWrapper();
+    const heading = createElement(
+      'h2',
+      ['product-card__heading'],
+      this.data.masterData.current.name['en-US'],
+    ) as HTMLElement;
+    const priceWrapper = this.drawPriceWrapper(this.data);
     const form = this.drawCartForm();
     const smallHeading = createElement('h4', ['product-card__detail-heading'], 'Details') as HTMLElement;
-    const details = createElement('p', ['product-card__details'], this.data.details) as HTMLParagraphElement;
+    const details = createElement(
+      'p',
+      ['product-card__details'],
+      this.data.masterData.current.description['en-US'],
+    ) as HTMLParagraphElement;
 
     info.append(heading, priceWrapper, form, smallHeading, details);
     wrapper.append(modal, slider, info);
@@ -27,14 +35,14 @@ class Card {
     return wrapper;
   }
 
-  private drawSlider(): HTMLDivElement {
+  private drawSlider(data: Product): HTMLDivElement {
     const container = createElement('div', ['product-card__slider-container']) as HTMLDivElement;
     const nextBtn = createElement('span', ['product-card__next-slide'], '&#10095') as HTMLSpanElement;
     const prevBtn = createElement('span', ['product-card__prev-slide'], '&#10094') as HTMLSpanElement;
     const slidesContainer = createElement('div', ['product-card__slider']) as HTMLDivElement;
     const slidesRow = createElement('div', ['product-card__slides-row']) as HTMLDivElement;
     const minisRow = createElement('div', ['product-card__minis-row']) as HTMLDivElement;
-    this.data.images.map((imageData, idx) => {
+    data.masterData.current.masterVariant.images.map((imageData, idx) => {
       const slide = createElement('div', ['product-card__slide']) as HTMLDivElement;
       const currentImg = createImageElement(imageData.url, ['product-card__slide-img']);
       const mini = createElement('div', ['product-card__mini']) as HTMLDivElement;
@@ -52,7 +60,7 @@ class Card {
       minisRow.append(mini);
     });
 
-    if (this.data.images.length > 1) {
+    if (data.masterData.current.masterVariant.images.length > 1) {
       slidesContainer.append(slidesRow, minisRow);
       container.append(prevBtn, slidesContainer, nextBtn);
     } else {
@@ -63,7 +71,7 @@ class Card {
     return container;
   }
 
-  private drawModal(): HTMLDivElement {
+  private drawModal(data: Product): HTMLDivElement {
     const modalDimming = createElement('div', ['modal-card__dimming']) as HTMLDivElement;
     const modalWrapper = createElement('div', ['modal-card__wrapper']) as HTMLDivElement;
     const closeModal = createElement('button', ['modal-card__close-btn']) as HTMLButtonElement;
@@ -71,7 +79,7 @@ class Card {
     const nextBtn = createElement('span', ['modal-card__next-slide'], '&#10095') as HTMLSpanElement;
     const prevBtn = createElement('span', ['modal-card__prev-slide'], '&#10094') as HTMLSpanElement;
     const slidesRow = createElement('div', ['modal-card__slides-row']) as HTMLDivElement;
-    this.data.images.map((imageData, idx) => {
+    data.masterData.current.masterVariant.images.map((imageData, idx) => {
       const slide = createElement('div', ['modal-card__slide']) as HTMLDivElement;
       const currentImg = createImageElement(imageData.url, ['modal-card__slide-img'], {
         'data-index': `${idx + 1}`,
@@ -81,7 +89,7 @@ class Card {
       slidesRow.append(slide);
     });
 
-    if (this.data.images.length > 1) {
+    if (data.masterData.current.masterVariant.images.length > 1) {
       modalSlider.append(prevBtn, slidesRow, nextBtn);
     } else {
       modalSlider.append(slidesRow);
@@ -92,22 +100,25 @@ class Card {
     return modalDimming;
   }
 
-  private drawPriceWrapper(): HTMLDivElement {
+  private drawPriceWrapper(data: Product): HTMLDivElement {
     const priceWrapper = createElement('div', ['product-card__price-wrapper']) as HTMLDivElement;
-    if (this.data.prices.discounted) {
-      const discountedPrice = createElement(
-        'span',
-        ['product-card__discounted-price'],
-        `${this.data.prices.discounted}${this.data.prices.currency} `,
-      ) as HTMLSpanElement;
-      priceWrapper.append(discountedPrice);
-    }
-    const price = createElement(
-      'span',
-      ['product-card__price', `${this.data.prices.discounted ? 'product-card__old-price' : ''}`],
-      `${this.data.prices.value}${this.data.prices.currency}`,
-    ) as HTMLSpanElement;
-    priceWrapper.append(price);
+    const discountedPrice = createElement('span', ['product-card__discounted-price']) as HTMLSpanElement;
+    const fullPrice = createElement('span', ['product-card__price']) as HTMLSpanElement;
+    priceWrapper.append(discountedPrice, fullPrice);
+    data.masterData.current.masterVariant.prices.forEach((price: Price): void => {
+      if (price.country === 'US') {
+        if (price.discounted) {
+          discountedPrice.innerHTML = `${(
+            price.discounted.value.centAmount /
+            10 ** price.discounted.value.fractionDigits
+          ).toFixed(2)}${price.value.currencyCode}`;
+          fullPrice.classList.add('product-card__old-price');
+        }
+        fullPrice.innerHTML = `${(price.value.centAmount / 10 ** price.value.fractionDigits).toFixed(2)}${
+          price.value.currencyCode
+        }`;
+      }
+    });
 
     return priceWrapper;
   }
