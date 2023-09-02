@@ -104,7 +104,6 @@ class Card {
     const priceWrapper = createElement('div', ['product-card__price-wrapper']) as HTMLDivElement;
     const discountedPrice = createElement('span', ['product-card__discounted-price']) as HTMLSpanElement;
     const fullPrice = createElement('span', ['product-card__price']) as HTMLSpanElement;
-    priceWrapper.append(discountedPrice, fullPrice);
     data.masterData.current.masterVariant.prices.forEach((price: Price): void => {
       if (price.country === 'US') {
         if (price.discounted) {
@@ -113,10 +112,12 @@ class Card {
             10 ** price.discounted.value.fractionDigits
           ).toFixed(2)}${price.value.currencyCode}`;
           fullPrice.classList.add('product-card__old-price');
+          priceWrapper.append(discountedPrice);
         }
         fullPrice.innerHTML = `${(price.value.centAmount / 10 ** price.value.fractionDigits).toFixed(2)}${
           price.value.currencyCode
         }`;
+        priceWrapper.append(fullPrice);
       }
     });
 
