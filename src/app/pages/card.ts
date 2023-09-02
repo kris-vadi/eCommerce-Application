@@ -1,36 +1,40 @@
+import getProductByID from '../api/getProduct/getProductByID';
 import { createElement, createImageElement } from '../components/utils';
 import { Product, Price } from '../types/types';
 
 class Card {
-  data: Product;
+  id: string;
 
-  constructor() {
-    this.data = JSON.parse(localStorage.getItem('currentProduct-data')!);
+  constructor(id: string) {
+    this.id = id;
   }
 
-  public drawCard(): HTMLDivElement {
+  public async drawCard(): Promise<HTMLDivElement> {
     const wrapper = createElement('div', ['product-card', 'main__wrapper'], '', {
       'data-slideIndex': '1',
     }) as HTMLDivElement;
-    const slider = this.drawSlider(this.data);
-    const modal = this.drawModal(this.data);
-    const info = createElement('div', ['product-card__info']) as HTMLDivElement;
-    const heading = createElement(
-      'h2',
-      ['product-card__heading'],
-      this.data.masterData.current.name['en-US'],
-    ) as HTMLElement;
-    const priceWrapper = this.drawPriceWrapper(this.data);
-    const form = this.drawCartForm();
-    const smallHeading = createElement('h4', ['product-card__detail-heading'], 'Details') as HTMLElement;
-    const details = createElement(
-      'p',
-      ['product-card__details'],
-      this.data.masterData.current.description['en-US'],
-    ) as HTMLParagraphElement;
 
-    info.append(heading, priceWrapper, form, smallHeading, details);
-    wrapper.append(modal, slider, info);
+    await getProductByID(this.id).then((data) => {
+      const slider = this.drawSlider(data);
+      const modal = this.drawModal(data);
+      const info = createElement('div', ['product-card__info']) as HTMLDivElement;
+      const heading = createElement(
+        'h2',
+        ['product-card__heading'],
+        data.masterData.current.name['en-US'],
+      ) as HTMLElement;
+      const priceWrapper = this.drawPriceWrapper(data);
+      const form = this.drawCartForm();
+      const smallHeading = createElement('h4', ['product-card__detail-heading'], 'Details') as HTMLElement;
+      const details = createElement(
+        'p',
+        ['product-card__details'],
+        data.masterData.current.description['en-US'],
+      ) as HTMLParagraphElement;
+
+      info.append(heading, priceWrapper, form, smallHeading, details);
+      wrapper.append(modal, slider, info);
+    });
 
     return wrapper;
   }

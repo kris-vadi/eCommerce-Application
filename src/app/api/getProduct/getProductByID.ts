@@ -1,4 +1,6 @@
-const getProductByID = async (productID: string): Promise<void> => {
+import { Product } from '../../types/types';
+
+const getProductByID = async (productID: string): Promise<Product> => {
   const myHeaders = {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${JSON.parse(localStorage.token_info).access_token}`,
@@ -9,14 +11,13 @@ const getProductByID = async (productID: string): Promise<void> => {
     headers: myHeaders,
   };
 
-  await fetch(
+  const res = await fetch(
     `https://api.australia-southeast1.gcp.commercetools.com/ecommerce-application-jsfe2023/products/${productID}`,
     requestOptions,
-  )
-    .then((response) => response.json())
-    .then((result) => {
-      localStorage.setItem('currentProduct-data', JSON.stringify(result));
-    });
+  );
+
+  const result = await res.json();
+  return result;
 };
 
 export default getProductByID;
