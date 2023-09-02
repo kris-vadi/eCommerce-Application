@@ -295,7 +295,7 @@ class Main {
         this.makeMiniActive(slideIndex);
       }
     }
-}
+  }
 
   private deleteSortFromQueryParam(): void {
     Object.keys(sorterParametrs).forEach((key: string) => {
@@ -437,9 +437,9 @@ class Main {
         const cardWrapper = document.querySelector('.product-card') as HTMLDivElement;
         const currentIndex = +cardWrapper.getAttribute('data-slideIndex')!;
         this.toggleCardModal(currentIndex);
-        }
-    });
-    
+      }
+      // });
+
       if (target.classList.contains('filters__item')) {
         this.toggleAccordion(target.id, target, 'filters');
       }
