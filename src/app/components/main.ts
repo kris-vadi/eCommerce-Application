@@ -469,6 +469,17 @@ class Main {
       if (target.classList.contains('filters__close_search')) {
         this.clearFilterForSearch();
       }
+
+      if (target.classList.contains('catalog__product')) {
+        const currentID = target.id;
+        router.navigate(`${pages.CATALOG}/${currentID}`);
+      }
+
+      if (target.parentElement?.classList.contains('catalog__product')) {
+        const parentDiv = target.parentNode as HTMLDivElement;
+        const currentID = parentDiv.id;
+        router.navigate(`${pages.CATALOG}/${currentID}`);
+      }
     });
 
     document.addEventListener('submit', async (event: Event) => {
