@@ -1,6 +1,7 @@
+import getCategories from '../api/category/getCategories';
 import User from '../components/user';
-import { RouteInfo, UrlInfo } from '../types/types';
-import { pages } from './pages';
+import { Category, RouteInfo, UrlInfo } from '../types/types';
+import { ID_SELECTOR, pages, SUBCATEGORY } from './pages';
 
 class Router {
   routes: RouteInfo[];
@@ -13,28 +14,42 @@ class Router {
   public navigate(url: string, notPushState?: boolean): void {
     const request = this.parceUrl(url);
 
-    const pathToFind = request.cardId === '' ? request.pathname : `${request.pathname}/${request.cardId}`;
-    const route = this.routes.find((item: RouteInfo) => item.path === pathToFind);
+    this.isCategory(request.id).then((isCategory: boolean) => {
+      const pathToFind =
+        request.id === '' ? request.pathname : `${request.pathname}/${isCategory ? SUBCATEGORY : ID_SELECTOR}`;
+      const route = this.routes.find((item: RouteInfo) => item.path === pathToFind);
 
-    if (!route) {
-      this.redirectToNotFound();
-      return;
-    }
+      if (!route) {
+        this.redirectToNotFound();
+        return;
+      }
 
-    if (this.redirectToMainPageIfLogged(route.path)) return;
+      if (this.redirectToMainPageIfLogged(route.path)) return;
 
-    if (!notPushState) {
-      window.history.pushState({}, '', `${route.path}`);
-    }
+      if (!notPushState) {
+        window.history.pushState({}, '', `${request.pathname}/${request.id}`);
+      }
 
-    route?.callback();
+      route?.callback(request.id);
+    });
+  }
+
+  private async isCategory(id: string): Promise<boolean> {
+    const categories: Category[] = await getCategories('');
+    const allCategoriesIds: string[] = [];
+
+    categories.forEach((category: Category) => {
+      allCategoriesIds.push(category.slug['ru-KZ']);
+    });
+
+    return allCategoriesIds.includes(id);
   }
 
   private parceUrl(url: string): UrlInfo {
     const paths = url.split('/');
     const result: UrlInfo = {
       pathname: paths[0] ? paths[0] : '',
-      cardId: paths[1] ? paths[1] : '',
+      id: paths[1] ? paths[1] : '',
     };
 
     return result;

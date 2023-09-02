@@ -10,4 +10,6 @@ export const pages = {
   NOT_FOUND: 'not-found',
 };
 
-export const ID_SELECTOR: string = '{id}';
+export const ID_SELECTOR: string = 'id';
+
+export const SUBCATEGORY: string = 'subcategory';

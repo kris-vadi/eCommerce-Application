@@ -1,11 +1,11 @@
 export interface RouteInfo {
   path: string;
-  callback: () => void;
+  callback: (id?: string) => void;
 }
 
 export interface UrlInfo {
   pathname: string;
-  cardId: string;
+  id: string;
 }
 
 export interface ValidTemplates {
