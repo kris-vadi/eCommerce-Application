@@ -1,6 +1,6 @@
 import getCategories from '../api/category/getCategories';
 import User from '../components/user';
-import { Category, RouteInfo, UrlInfo } from '../types/types';
+import { Category, RouteInfo, UrlInfo, Product } from '../types/types';
 import { ID_SELECTOR, pages, SUBCATEGORY } from './pages';
 
 class Router {
@@ -14,9 +14,13 @@ class Router {
   public navigate(url: string, notPushState?: boolean): void {
     const request = this.parceUrl(url);
 
+    const isProduct: boolean = this.isProductId(request.id);
+
     this.isCategory(request.id).then((isCategory: boolean) => {
       const pathToFind =
-        request.id === '' ? request.pathname : `${request.pathname}/${isCategory ? SUBCATEGORY : ID_SELECTOR}`;
+        request.id === ''
+          ? `${request.pathname}`
+          : `${request.pathname}/${isCategory ? SUBCATEGORY : isProduct ? ID_SELECTOR : ''}`;
       const route = this.routes.find((item: RouteInfo) => item.path === pathToFind);
 
       if (!route) {
@@ -43,6 +47,19 @@ class Router {
     });
 
     return allCategoriesIds.includes(id);
+  }
+
+  private isProductId(id: string): boolean {
+    const products: Product[] = localStorage.getItem('all_products')
+      ? JSON.parse(localStorage.getItem('all_products') as string)
+      : [];
+    const allProductsIds: string[] = [];
+
+    products.forEach((product: Product) => {
+      allProductsIds.push(product.id);
+    });
+
+    return allProductsIds.includes(id);
   }
 
   private parceUrl(url: string): UrlInfo {
