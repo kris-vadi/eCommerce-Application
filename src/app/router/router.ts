@@ -1,6 +1,8 @@
-import getCategories from '../api/category/getCategories';
+import getAllProducts from '../api/getProduct/getAllProducts';
+import { addNewQueryParam } from '../api/helpers/utils';
 import User from '../components/user';
-import { Category, RouteInfo, UrlInfo, Product } from '../types/types';
+import Catalog from '../pages/catalog';
+import { Category, Product, RouteInfo, UrlInfo } from '../types/types';
 import { ID_SELECTOR, pages, SUBCATEGORY } from './pages';
 
 class Router {
@@ -15,31 +17,32 @@ class Router {
     const request = this.parceUrl(url);
 
     const isProduct: boolean = this.isProductId(request.id);
+    const isCategory: boolean = this.isCategory(request.id);
 
-    this.isCategory(request.id).then((isCategory: boolean) => {
-      const pathToFind =
-        request.id === ''
-          ? `${request.pathname}`
-          : `${request.pathname}/${isCategory ? SUBCATEGORY : isProduct ? ID_SELECTOR : ''}`;
-      const route = this.routes.find((item: RouteInfo) => item.path === pathToFind);
+    const pathToFind =
+      request.id === ''
+        ? `${request.pathname}`
+        : `${request.pathname}/${isCategory ? SUBCATEGORY : isProduct ? ID_SELECTOR : ''}`;
+    const route = this.routes.find((item: RouteInfo) => item.path === pathToFind);
 
-      if (!route) {
-        this.redirectToNotFound();
-        return;
-      }
+    if (!route) {
+      this.redirectToNotFound();
+      return;
+    }
 
-      if (this.redirectToMainPageIfLogged(route.path)) return;
+    if (this.redirectToMainPageIfLogged(route.path)) return;
 
-      if (!notPushState) {
-        window.history.pushState({}, '', `${request.pathname}/${request.id}`);
-      }
+    if (!notPushState) {
+      window.history.pushState({}, '', request.id === '' ? `${request.pathname}` : `${request.pathname}/${request.id}`);
+    }
 
-      route?.callback(request.id);
-    });
+    route?.callback(request.id);
   }
 
-  private async isCategory(id: string): Promise<boolean> {
-    const categories: Category[] = await getCategories('');
+  private isCategory(id: string): boolean {
+    const categories: Category[] = localStorage.getItem('categories')
+      ? JSON.parse(localStorage.getItem('categories') as string)
+      : [];
     const allCategoriesIds: string[] = [];
 
     categories.forEach((category: Category) => {
@@ -92,6 +95,26 @@ class Router {
     return false;
   }
 
+  private async navigationByStagedCategories(path: string, id: string): Promise<void> {
+    if (this.isCategory(id)) {
+      const categories: Category[] = localStorage.getItem('categories')
+        ? JSON.parse(localStorage.getItem('categories') as string)
+        : [];
+      const currentId: string | undefined = categories.find((category: Category) => {
+        return category.slug['ru-KZ'] === id;
+      })?.id;
+
+      Catalog.clearSortedProducts();
+      addNewQueryParam('sidebar', 'where', `masterData%28current%28categories%28id%3D%22${currentId}%22%29%29%29`);
+
+      await getAllProducts();
+      this.navigate(`${pages.CATALOG}/${id}`, true);
+    } else {
+      Catalog.clearSortedProducts();
+      this.navigate(path, true);
+    }
+  }
+
   private setEventListeners(): void {
     window.addEventListener('DOMContentLoaded', (event: Event): void => {
       event.preventDefault();
@@ -99,9 +122,16 @@ class Router {
       this.navigate(path);
     });
 
-    window.addEventListener('popstate', (): void => {
+    window.addEventListener('popstate', async (): Promise<void> => {
       const path = this.getCorrectPath();
-      this.navigate(path, true);
+      const id: string = this.parceUrl(path).id ? this.parceUrl(path).id : '';
+
+      if (id !== '') {
+        await this.navigationByStagedCategories(path, id);
+      } else {
+        Catalog.clearSortedProducts();
+        this.navigate(path, true);
+      }
     });
   }
 

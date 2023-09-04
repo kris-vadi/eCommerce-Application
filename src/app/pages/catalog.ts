@@ -1,33 +1,79 @@
+import getCategories from '../api/category/getCategories';
 import Filters from '../components/filters';
 import { createElement } from '../components/utils';
 import { catalogQueryParams } from '../state/state';
-import { Price, Product } from '../types/types';
+import { Category, Price, Product } from '../types/types';
 
 class Catalog {
   constructor() {
-    localStorage.removeItem('sorted_products');
     localStorage.removeItem('search_products');
-    catalogQueryParams.clear();
   }
 
-  public drawCatalog(): HTMLDivElement {
+  public async drawCatalog(): Promise<HTMLDivElement> {
     const catalog = createElement('div', ['catalog', 'main__wrapper']) as HTMLDivElement;
-    const title = createElement('div', ['catalog__title'], '<h2>Catalog</h2>') as HTMLDivElement;
+    const breadcrumbs = createElement(
+      'ul',
+      ['catalog__breadcrumbs'],
+      '<li class="catalog__breadcrumb" data-page="catalog" >Catalog</li>',
+    ) as HTMLDivElement;
     const content = createElement('div', ['catalog__content']) as HTMLDivElement;
     const products = createElement('div', ['catalog__products']) as HTMLDivElement;
     const mobileFiltersButton = createElement('div', ['mobile-filters__item'], 'Filters') as HTMLDivElement;
-    const filters = this.drawFilters();
+    const filters = await this.drawFilters();
 
     content.append(mobileFiltersButton, filters, products);
-    catalog.append(title, content);
+    catalog.append(breadcrumbs, content);
 
     return catalog;
   }
 
-  private drawFilters(): HTMLDivElement {
+  private async drawFilters(): Promise<HTMLDivElement> {
     const filters = new Filters();
 
     return filters.drawFilters();
+  }
+
+  static async drawBreadcrumbs(): Promise<void> {
+    const breadcrumbs = document.querySelector('.catalog__breadcrumbs') as HTMLUListElement;
+    breadcrumbs.innerHTML = '<li class="catalog__breadcrumb" data-page="catalog" >Catalog</li>';
+
+    if (catalogQueryParams.has('sidebar')) {
+      const currentParamValue: string = catalogQueryParams.get('sidebar').value;
+      const currentCategoryId: string = currentParamValue
+        .replace('masterData%28current%28categories%28id%3D%22', '')
+        .replace('%22%29%29%29', '');
+
+      const current = document.getElementById(currentCategoryId);
+      if (current?.dataset.parent) {
+        await getCategories('', [{ key: 'where', value: `id%3D%22${current.dataset.parent}%22` }])
+          .then((result: Category[]) => {
+            result.forEach((parent: Category) => {
+              const breadcrumbParrent = createElement(
+                'li',
+                ['catalog__breadcrumb'],
+                parent.name['ru-KZ'],
+              ) as HTMLLIElement;
+              breadcrumbParrent.dataset.page = parent.slug['ru-KZ'];
+              breadcrumbParrent.id = parent.id;
+
+              breadcrumbs.append(breadcrumbParrent);
+            });
+          })
+          .then(() => {
+            const breadcrumbCurrent = createElement('li', ['catalog__breadcrumb'], current?.innerText) as HTMLLIElement;
+            breadcrumbCurrent.dataset.page = current?.dataset.page;
+            breadcrumbCurrent.id = currentCategoryId;
+
+            breadcrumbs.append(breadcrumbCurrent);
+          });
+      } else {
+        const breadcrumbCurrent = createElement('li', ['catalog__breadcrumb'], current?.innerText) as HTMLLIElement;
+        breadcrumbCurrent.dataset.page = current?.dataset.page;
+        breadcrumbCurrent.id = currentCategoryId;
+
+        breadcrumbs.append(breadcrumbCurrent);
+      }
+    }
   }
 
   static drawProducts(): void {
@@ -35,6 +81,8 @@ class Catalog {
     products.innerHTML = '';
     let currentProducts: Product[] = [];
     let searchProducts: Product[] = [];
+
+    this.drawBreadcrumbs();
 
     if (
       localStorage.getItem('sorted_products') &&
@@ -47,7 +95,7 @@ class Catalog {
       currentProducts = JSON.parse(localStorage.getItem('all_products') as string);
     }
 
-    if (localStorage.getItem('search_products') !== null) {
+    if (localStorage.getItem('search_products')) {
       searchProducts = JSON.parse(localStorage.getItem('search_products') as string);
       const searchProductsIds: string[] = [];
 
@@ -58,7 +106,7 @@ class Catalog {
       currentProducts = currentProducts.filter((product: Product): boolean => searchProductsIds.includes(product.id));
     }
 
-    if (currentProducts.length > 0) {
+    if (currentProducts && currentProducts.length > 0) {
       currentProducts.forEach((product: Product): void => {
         const productBlock = this.drawProduct(product);
         products.append(productBlock);
@@ -117,6 +165,11 @@ class Catalog {
     prices.append(priceValue);
 
     return prices;
+  }
+
+  static clearSortedProducts(): void {
+    localStorage.removeItem('sorted_products');
+    catalogQueryParams.clear();
   }
 }
 

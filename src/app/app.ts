@@ -88,17 +88,17 @@ class App {
       },
       {
         path: `${pages.CATALOG}`,
-        callback: (): void => {
+        callback: async (): Promise<void> => {
           const catalog = new Catalog();
-          Main.setContent(catalog.drawCatalog());
+          Main.setContent(await catalog.drawCatalog());
           Catalog.drawProducts();
         },
       },
       {
         path: `${pages.CATALOG}/${SUBCATEGORY}`,
-        callback: (): void => {
+        callback: async (): Promise<void> => {
           const catalog = new Catalog();
-          Main.setContent(catalog.drawCatalog());
+          Main.setContent(await catalog.drawCatalog());
           Catalog.drawProducts();
         },
       },
