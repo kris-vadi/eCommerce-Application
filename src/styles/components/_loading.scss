@@ -1,0 +1,18 @@
+.main__loading {
+  position: fixed;
+  z-index: 4;
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main__loading-img {
+  z-index: 5;
+  width: 100px;
+  height: 100px;
+  background-image: url('../assets/images/loading.gif');
+  background-size: cover;
+}

@@ -1,0 +1,34 @@
+html {
+  font-size: 10px;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: $font-dark;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.wrapper {
+  text-align: center;
+  padding: 0 40px;
+}
+
+.main {
+  flex: 1 0 auto;
+}
+
+.hidden-overflow {
+  overflow: hidden;
+}
+
+@media (max-width: 520px) {
+  .wrapper {
+    text-align: center;
+    padding: 0 20px;
+  }
+}

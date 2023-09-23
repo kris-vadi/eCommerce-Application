@@ -1,0 +1,15 @@
+<svg width="13" height="15" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="17" width="15" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <polyline stroke-linejoin="round" stroke-linecap="round" stroke="#97a4c3" fill="none" id="svg_2" points="2.4463666677474976,3.4844290018081665 3.4463666677474976,13.484429240226746 9.446367144584656,13.484429240226746 10.446367144584656,3.4844290018081665 " class="cls-2"/>
+  <line stroke-linejoin="round" stroke-linecap="round" stroke="#97a4c3" fill="none" id="svg_3" y2="3.484429" y1="3.484429" x2="11.446367" x1="1.446367" class="cls-2"/>
+  <polyline stroke-linejoin="round" stroke-linecap="round" stroke="#97a4c3" fill="none" id="svg_4" points="4.946366667747498,3.4844290018081665 4.946366667747498,1.4844290018081665 7.946366667747498,1.4844290018081665 7.946366667747498,3.4844290018081665 " class="cls-2"/>
+  <line stroke-linejoin="round" stroke-linecap="round" stroke="#97a4c3" fill="none" id="svg_5" y2="11.484429" y1="5.484429" x2="5.446367" x1="4.946367" class="cls-2"/>
+  <line stroke-linejoin="round" stroke-linecap="round" stroke="#97a4c3" fill="none" id="svg_6" y2="11.484429" y1="5.484429" x2="7.446367" x1="7.946367" class="cls-2"/>
+ </g>
+</svg>

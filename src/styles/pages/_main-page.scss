@@ -1,0 +1,179 @@
+.promo__item {
+  display: flex;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.promo__item-1 {
+  flex-direction: row-reverse;
+
+  .promo__info-block {
+    background-color: $background-beige;
+  }
+}
+
+.promo__img {
+  width: 60%;
+  height: 400px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.promo__img-0 {
+  background-image: url(../assets/images/baby_discount.jpg);
+}
+
+.promo__img-1 {
+  background-image: url(../assets/images/fall_discount.jpg);
+}
+
+.promo__info-block {
+  width: 40%;
+  height: auto;
+  padding: 20px;
+  background-color: $background-blue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.promo__info-heading {
+  font-size: 3em;
+  margin-bottom: 15px;
+}
+
+.promo__info-text {
+  font-size: 1.4em;
+  margin-bottom: 15px;
+  text-align: center;
+
+  span {
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  div {
+    font-size: 0.7em;
+    font-weight: 600;
+  }
+}
+
+.promo__btn-to-catalog {
+  color: white;
+  cursor: pointer;
+}
+
+.main-page__categories {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 15px;
+}
+.main-page__category {
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  &::before {
+    content: '';
+    position: absolute;
+    background-color: $green;
+    opacity: 0.2;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+  &:hover {
+    &::before {
+      opacity: 0.6;
+    }
+  }
+}
+
+.main-page__category-text {
+  z-index: 1;
+}
+
+.main-page__categories-title {
+  text-align: center;
+  margin: 40px 0 20px;
+}
+
+.main-page__bikes-trikes-scooters {
+  background-image: url('../assets/images/categories/bikes-trikes-scooters.png');
+  grid-row: 1 / 3;
+}
+
+.main-page__games-puzzles {
+  background-image: url('../assets/images/categories/games-puzzles.png');
+}
+
+.main-page__garden-play {
+  background-image: url('../assets/images/categories/garden-play.png');
+}
+
+.main-page__role-play-dress-up {
+  background-image: url('../assets/images/categories/role-play-dress-up.png');
+}
+
+.main-page__sand-water-play {
+  background-image: url('../assets/images/categories/sand-water-play.png');
+}
+
+.main-page__toy-transport {
+  background-image: url('../assets/images/categories/toy-transport.png');
+}
+
+.main-page__wooden-toys {
+  background-image: url('../assets/images/categories/wooden-toys.png');
+}
+
+@media (max-width: 1100px) {
+  .promo__item {
+    flex-direction: column;
+  }
+
+  .promo__img {
+    width: 100%;
+    height: 200px;
+  }
+
+  .promo__info-block {
+    width: 100%;
+  }
+
+  .promo__info-heading {
+    font-size: 1.7em;
+  }
+
+  .promo__info-text {
+    font-size: 1.1em;
+
+    div {
+      font-size: 0.8em;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .main-page__categories {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 540px) {
+  .main-page__category {
+    min-height: 155px;
+  }
+}

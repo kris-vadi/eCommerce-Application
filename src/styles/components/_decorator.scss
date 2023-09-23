@@ -1,0 +1,28 @@
+.decorator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin: 10px 0 20px;
+}
+
+.decorator > * {
+  width: 10px;
+  height: 10px;
+}
+
+.decorator__blue,
+.decorator__peach,
+.decorator__green {
+  border-radius: 50%;
+}
+
+.decorator__blue {
+  background-color: $blue;
+}
+.decorator__peach {
+  background-color: $peach;
+}
+.decorator__green {
+  background-color: $green;
+}

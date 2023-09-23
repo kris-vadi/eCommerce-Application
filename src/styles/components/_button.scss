@@ -1,0 +1,39 @@
+.button {
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  background-color: $blue;
+  &:hover {
+    background-color: darken($blue, 5%);
+  }
+  &:disabled {
+    border-color: #d8d8d8;
+    pointer-events: none;
+  }
+}
+
+.button_white {
+  background-color: white;
+  border: 2px solid $blue;
+  &:hover {
+    background-color: $blue;
+  }
+}
+
+.button_green {
+  background-color: $green;
+  color: white;
+  &:hover {
+    background-color: darken($green, 5%);
+  }
+}
+
+.button_white_red {
+  background-color: white;
+  outline: 2px solid rgb(206, 106, 82, 0.3);
+  padding: 5px 9px;
+  &:hover {
+    border: none;
+    background-color: rgb(206, 106, 82, 0.3);
+  }
+}

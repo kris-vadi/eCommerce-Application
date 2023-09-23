@@ -1,0 +1,28 @@
+@import 'base/normalize';
+@import 'base/variables';
+@import 'base/fonts';
+@import 'base/base';
+@import 'base/typografy';
+
+//components
+@import 'components/header';
+@import 'components/main';
+@import 'components/hamburger';
+@import 'components/logo';
+@import 'components/footer';
+@import 'components/button';
+@import 'components/sidebar';
+@import 'components/decorator';
+@import 'components/filters';
+@import 'components/loading';
+
+//pages
+@import 'pages/main-page';
+@import 'pages/autorization';
+@import 'pages/card';
+@import 'pages/user-profile';
+@import 'pages/not-found';
+@import 'pages/contacts';
+@import 'pages/catalog';
+@import 'pages/cart';
+@import 'pages/about-us';

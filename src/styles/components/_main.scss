@@ -1,0 +1,29 @@
+.main__wrapper {
+  padding: 40px;
+}
+
+.main__wrapper_thin {
+  text-align: center;
+  margin: 0 auto;
+  max-width: 720px;
+}
+
+.paragraph {
+  margin: 20px 0;
+}
+
+.main__blue-text {
+  color: $blue;
+  font-style: italic;
+}
+
+.main__green-text {
+  color: $green;
+  font-style: italic;
+}
+
+@media (max-width: 370px) {
+  .main__wrapper {
+    padding: 40px 20px;
+  }
+}

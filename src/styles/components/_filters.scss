@@ -1,0 +1,138 @@
+.filters__item,
+.mobile-filters__item {
+  padding: 20px 0;
+  border-bottom: 1px solid $light-blue;
+  font-weight: 600;
+  color: $blue;
+  text-transform: capitalize;
+  position: relative;
+  cursor: pointer;
+  &::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: calc(50% - 7px);
+    height: 14px;
+    width: 14px;
+    border: solid 1px $blue;
+    opacity: 0.8;
+    border-width: 1px 1px 0 0;
+    transform-origin: center center;
+    box-sizing: border-box;
+    transform: rotate(45deg);
+    transition: all 0.5s ease-in;
+  }
+  &:hover {
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.mobile-filters__item {
+  background: rgba(223, 229, 225, 0.4);
+  padding-left: 20px;
+}
+
+.filters__item_active,
+.mobile-filters__item_active {
+  &::after {
+    transform: rotate(-225deg);
+  }
+}
+.filters__item_active {
+  border-bottom: none;
+}
+
+.filters__content_hidden {
+  display: none;
+}
+
+.filters__content {
+  padding: 10px 0 17px;
+  border-bottom: 1px solid #dde3f5;
+}
+
+.filters__label {
+  font-size: 1.3rem;
+  font-style: inherit;
+}
+
+.filters__select,
+.filters__search {
+  font-family: 'Montserrat', sans-serif;
+  color: $blue;
+  padding: 10px 0;
+  width: 95%;
+  margin-bottom: 15px;
+}
+
+.filters__select {
+  border: 1px solid #dde3f5;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(#dfe5e1, 0.2);
+  }
+}
+
+.filters__search-block {
+  position: relative;
+}
+
+.filters__search {
+  background-color: rgba(#dfe5e1, 0.4);
+  font-style: italic;
+  padding-left: 5px;
+}
+
+.filters__button {
+  margin: 30px 0;
+  width: 95%;
+}
+
+.filters__apply {
+  font-weight: 600;
+  font-size: 1.3rem;
+  padding-top: 15px;
+  cursor: pointer;
+  &:hover {
+    color: $green;
+  }
+}
+
+.filters__close {
+  font-size: 2.5rem;
+  cursor: pointer;
+  &:hover {
+    color: $green;
+  }
+}
+
+.filters__close_search {
+  position: absolute;
+  right: 10%;
+  top: 5%;
+}
+
+.filters__close_hidden {
+  display: none;
+}
+
+.filters__prices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 1.3rem;
+  gap: 10px;
+}
+
+.filters__price-input {
+  border: 1px solid #dde3f5;
+  margin: 0 10px;
+  width: 45px;
+  height: 36px;
+  padding: 5px;
+  text-align: center;
+  color: $blue;
+}
